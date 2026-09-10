@@ -1,0 +1,10 @@
+I encountered that the given command prompt from the lab instruction has some mistakes. I think it should be from
+
+docker exec -it dss150p-w23-postgres psql -U dss150p -d dss150p
+
+to
+
+docker exec -it dss150p-lab2-postgres psql -U dss150p -d dss150p
+
+----
+I took a screenshot of the inspection can be seen in teh same folder as this txt.
