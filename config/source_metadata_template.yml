@@ -1,12 +1,132 @@
-source_name: "TODO"
-source_type: "TODO"
-location_or_endpoint: "TODO"
-owner: "TODO"
-description: "TODO"
-record_count: "TODO"
-schema: []
-primary_or_candidate_key: "TODO"
-update_pattern: "TODO"
-known_quality_issues: []
-acquisition_method: "TODO"
-validation_checks: []
+source_name: "customers"
+source_type: "file"
+location_or_endpoint: "data/customers.csv"
+owner: "placeholder - requires confirmation"
+description: "Customer master data including names, emails, city, signup date, and segment."
+record_count: 250
+schema:
+  - { name: customer_id, type: string, nullable: false }
+  - { name: first_name, type: string, nullable: false }
+  - { name: last_name, type: string, nullable: false }
+  - { name: email, type: string, nullable: true }
+  - { name: city, type: string, nullable: true }
+  - { name: signup_date, type: date, nullable: false }
+  - { name: customer_segment, type: string, nullable: false }
+primary_or_candidate_key: "customer_id"
+update_pattern: "batch file"
+known_quality_issues:
+  - "Some missing emails"
+  - "Duplicate customer_id rows"
+acquisition_method: "File transfer into lab repo"
+validation_checks:
+  - "customer_id must be unique"
+  - "signup_date must be valid date"
+  - "email must follow proper format if present"
+
+
+source_name: "orders"
+source_type: "file"
+location_or_endpoint: "data/orders.json"
+owner: "placeholder - requires confirmation"
+description: "Transactional orders with timestamps, status, item counts, amounts, and nested shipping details."
+record_count: 250
+schema:
+  - { name: order_id, type: string, nullable: false }
+  - { name: customer_id, type: string, nullable: false }
+  - { name: order_timestamp, type: timestamp, nullable: false }
+  - { name: status, type: string, nullable: false }
+  - { name: item_count, type: integer, nullable: false }
+  - { name: subtotal, type: numeric, nullable: false }
+  - { name: shipping_fee, type: numeric, nullable: false }
+  - { name: total_amount, type: numeric, nullable: false }
+  - { name: shipping.region, type: string, nullable: false }
+  - { name: shipping.method, type: string, nullable: false }
+primary_or_candidate_key: "order_id"
+update_pattern: "batch file"
+known_quality_issues:
+  - "Some orders cancelled or pending"
+  - "Shipping method varies, may be inconsistent"
+acquisition_method: "JSON ingestion via pipeline"
+validation_checks:
+  - "order_id must be unique"
+  - "total_amount = subtotal + shipping_fee"
+  - "status must be in {Pending, Packed, Shipped, Delivered, Cancelled, Paid}"
+
+
+source_name: "products"
+source_type: "file"
+location_or_endpoint: "data/products.csv / data/products.json"
+owner: "placeholder - requires confirmation"
+description: "Product catalog with IDs, names, categories, brands, prices, stock, and weights."
+record_count: 200
+schema:
+  - { name: product_id, type: string, nullable: false }
+  - { name: product_name, type: string, nullable: false }
+  - { name: category, type: string, nullable: false }
+  - { name: brand, type: string, nullable: false }
+  - { name: unit_price, type: numeric, nullable: false }
+  - { name: stock_quantity, type: integer, nullable: false }
+  - { name: weight_kg, type: numeric, nullable: false }
+primary_or_candidate_key: "product_id"
+update_pattern: "batch file"
+known_quality_issues:
+  - "Some stock_quantity = 0 (out of stock)"
+  - "Weight values vary widely, possible outliers"
+acquisition_method: "File ingestion (CSV/JSON)"
+validation_checks:
+  - "product_id must be unique"
+  - "unit_price must be non-negative"
+  - "stock_quantity must be integer >= 0"
+
+
+source_name: "api_events"
+source_type: "api"
+location_or_endpoint: "http://127.0.0.1:8000/api/events"
+owner: "placeholder - requires confirmation"
+description: "Event stream with IDs, customer references, event types, amounts, timestamps, and metadata."
+record_count: 122
+schema:
+  - { name: event_id, type: string, nullable: false }
+  - { name: customer_id, type: string, nullable: false }
+  - { name: event_type, type: string, nullable: false }
+  - { name: amount, type: numeric, nullable: false }
+  - { name: updated_at, type: timestamp, nullable: false }
+  - { name: metadata.channel, type: string, nullable: true }
+  - { name: metadata.campaign, type: string, nullable: true }
+primary_or_candidate_key: "event_id"
+update_pattern: "paginated batch API"
+known_quality_issues:
+  - "Duplicate event_ids (e.g., E0020, E0055 appear twice)"
+  - "Metadata fields inconsistent across events"
+acquisition_method: "HTTP GET requests via Python requests"
+validation_checks:
+  - "event_id must be unique"
+  - "amount must be non-negative"
+  - "updated_at must be valid timestamp"
+
+
+source_name: "support_tickets"
+source_type: "database"
+location_or_endpoint: "PostgreSQL table: support_tickets"
+owner: "placeholder - requires confirmation"
+description: "Customer support tickets with categories, agents, timestamps, and status."
+record_count: 2500
+schema:
+  - { name: ticket_id, type: integer, nullable: false }
+  - { name: customer_id, type: string, nullable: false }
+  - { name: category, type: string, nullable: false }
+  - { name: priority, type: string, nullable: false }
+  - { name: assigned_agent, type: string, nullable: true }
+  - { name: opened_at, type: timestamp, nullable: false }
+  - { name: resolved_at, type: timestamp, nullable: true }
+  - { name: status, type: string, nullable: false }
+primary_or_candidate_key: "ticket_id"
+update_pattern: "transactional"
+known_quality_issues:
+  - "Some tickets have no assigned agent"
+  - "Timestamps may be inconsistent"
+acquisition_method: "SQL queries via dockerized PostgreSQL"
+validation_checks:
+  - "ticket_id must be unique"
+  - "status must be in {Open, Closed, Resolved}"
+

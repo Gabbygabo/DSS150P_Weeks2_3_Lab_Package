@@ -1,0 +1,101 @@
+schema: 
+  - field_name: customer_id
+    source_representation: string (CSV text)
+    logical_type: string
+    nullable: false
+    key_role: primary key
+    definition: "Unique identifier for each customer"
+
+  - field_name: first_name
+    source_representation: string (CSV text)
+    logical_type: string
+    nullable: false
+    key_role: none
+    definition: "Customer's given name"
+
+  - field_name: last_name
+    source_representation: string (CSV text)
+    logical_type: string
+    nullable: false
+    key_role: none
+    definition: "Customer's family name"
+
+  - field_name: email
+    source_representation: string (CSV text)
+    logical_type: string (email format)
+    nullable: true
+    key_role: none
+    definition: "Customer's email address"
+
+  - field_name: city
+    source_representation: string (CSV text)
+    logical_type: string
+    nullable: true
+    key_role: none
+    definition: "City of residence"
+
+  - field_name: signup_date
+    source_representation: string (CSV text, dd/mm/yyyy)
+    logical_type: date
+    nullable: false
+    key_role: none
+    definition: "Date the customer signed up"
+
+  - field_name: customer_segment
+    source_representation: string (CSV text)
+    logical_type: categorical string
+    nullable: false
+    key_role: none
+    definition: "Segment classification (Professional, Retail, SME, Student)"
+
+
+
+schema:
+  - field_name: event_id
+    source_representation: string (JSON text)
+    logical_type: string
+    nullable: false
+    key_role: primary key
+    definition: "Unique identifier for each event"
+
+  - field_name: customer_id
+    source_representation: string (JSON text)
+    logical_type: string (foreign key)
+    nullable: false
+    key_role: foreign key
+    definition: "Reference to customer triggering the event"
+
+  - field_name: event_type
+    source_representation: string (JSON text)
+    logical_type: categorical string
+    nullable: false
+    key_role: none
+    definition: "Type of event (page_view, add_to_cart, checkout, payment, support)"
+
+  - field_name: amount
+    source_representation: number (JSON numeric)
+    logical_type: decimal
+    nullable: false
+    key_role: none
+    definition: "Monetary value associated with the event"
+
+  - field_name: updated_at
+    source_representation: string (JSON text, ISO 8601)
+    logical_type: timestamp
+    nullable: false
+    key_role: none
+    definition: "Timestamp when the event was recorded"
+
+  - field_name: metadata.channel
+    source_representation: string (JSON text)
+    logical_type: categorical string
+    nullable: true
+    key_role: none
+    definition: "Channel through which the event occurred (web, mobile, partner)"
+
+  - field_name: metadata.campaign
+    source_representation: string (JSON text)
+    logical_type: categorical string
+    nullable: true
+    key_role: none
+    definition: "Marketing campaign associated with the event"

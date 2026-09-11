@@ -1,0 +1,11 @@
+* If the watermark is saved before the raw file is successfully written:  
+The pipeline may advance the watermark but lose the actual data. On the next run, those records will be skipped because the system thinks they were already ingested. This leads to data loss.
+
+* If the source allows multiple records with exactly the same timestamp:  
+Only records with updated_at strictly greater than the watermark are fetched. Any records that share the same timestamp as the watermark may be missed, resulting in incomplete ingestion.
+
+* One limitation of this simplified watermark:  
+It assumes timestamps are unique and strictly increasing, which is not always true in real systems.
+
+* One production‑grade mitigation:  
+Use an inclusive comparison (>=) combined with deduplication by a unique key (e.g., event_id). Alternatively, implement Change Data Capture (CDC) or log‑based ingestion to guarantee no missed records even if timestamps collide.

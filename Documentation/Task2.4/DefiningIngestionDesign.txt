@@ -1,0 +1,5 @@
+CSV/JSON/Parquet files will be ingested via file copy into raw/files/, tracked with a manifest and SHA‑256 hash to prevent duplicate file loads. These are full batch ingestions with no incremental state.
+
+REST API events will be ingested via paginated GET requests, stored in raw/api/events.jsonl. Duplicate events are prevented using event_id, and incremental ingestion is managed by tracking the maximum updated_at timestamp.
+
+PostgreSQL support_tickets will not be ingested in this lab; only schema inspection is performed. In a real pipeline, incremental ingestion could be achieved using timestamps (opened_at, resolved_at) or Change Data Capture (CDC).

@@ -1,18 +1,67 @@
-dataset: customers
-owner: "TODO"
-source_type: csv
-primary_key: customer_id
-delivery:
-  cadence: "TODO"
+dataset_name: customers
+description: "Customer master dataset containing identifiers, names, emails, city of residence, signup dates, and segment classification."
+
+owner: "placeholder - requires confirmation"
+producer: "Data ingestion pipeline team"
+consumer: "Analytics pipeline / reporting system"
+
+primary_or_candidate_key: "customer_id"
+
+expected_delivery_cadence: "Batch file, daily or weekly delivery (requires confirmation)"
+
 fields:
-  - name: customer_id
-    type: string
+  - field_name: customer_id
+    logical_type: string
     nullable: false
-    unique: true
-  - name: email
-    type: string
+    uniqueness: unique
+    definition: "Unique identifier for each customer"
+    key_role: primary key
+
+  - field_name: first_name
+    logical_type: string
+    nullable: false
+    uniqueness: not required
+    definition: "Customer's given name"
+
+  - field_name: last_name
+    logical_type: string
+    nullable: false
+    uniqueness: not required
+    definition: "Customer's family name"
+
+  - field_name: email
+    logical_type: string (email format)
     nullable: true
+    uniqueness: not required
+    definition: "Customer's email address"
+
+  - field_name: city
+    logical_type: string
+    nullable: true
+    uniqueness: not required
+    definition: "City of residence"
+
+  - field_name: signup_date
+    logical_type: date
+    nullable: false
+    uniqueness: not required
+    definition: "Date the customer signed up"
+
+  - field_name: customer_segment
+    logical_type: categorical string
+    nullable: false
+    uniqueness: not required
+    definition: "Segment classification (Professional, Retail, SME, Student)"
+
 quality_rules:
-  - "TODO: define at least 5 rules"
-change_policy:
-  schema_change_notice: "TODO"
+  - "customer_id must not be null"
+  - "customer_id must be unique"
+  - "signup_date must be a valid date in YYYY-MM-DD format"
+  - "email must follow proper format if present"
+  - "customer_segment must be one of {Professional, Retail, SME, Student}"
+
+schema_change_notification: "Any schema changes must be communicated at least 2 weeks in advance to consumers."
+
+contact_information: "placeholder - requires confirmation"
+
+expected_ingestion_approach: "Full batch ingestion. Justification: dataset size is manageable (~250 records) and full refresh ensures consistency with upstream source."
