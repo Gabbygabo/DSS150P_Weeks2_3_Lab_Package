@@ -95,7 +95,7 @@ def profile_parquet(path):
 
     # Compare schema behavior
     print("\nSchema behavior vs CSV/JSON:")
-    print("- Parquet preserves column types (e.g., int64, datetime) more reliably.")
+    print("- Parquet preserves column types (such as int64, datetime) more reliably.")
     print("- CSV infers everything as text unless parsed.")
     print("- JSON can mix types but is less strict.")
 
