@@ -1,0 +1,1 @@
+This activity was completed with the assistance of AI to support and enhance the learning process. The learner was guided through the steps but also gained new insights and understanding along the way. Rest assured, the experience was not about replacing learning but about strengthening it. The learner has genuinely learned something new.
